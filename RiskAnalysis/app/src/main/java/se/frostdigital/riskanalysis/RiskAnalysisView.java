@@ -36,6 +36,7 @@ public class RiskAnalysisView extends View {
 
     private int columns;
     private int rows;
+    private int selectedRow, selectedColumn;
     private AreaType[][] colorsMatrix;
 
     private Paint greenPaint, yellowPaint, redPaint, separatorPaint;
@@ -54,6 +55,16 @@ public class RiskAnalysisView extends View {
                 {AreaType.GREEN,    AreaType.GREEN,     AreaType.YELLOW,    AreaType.YELLOW,    AreaType.YELLOW,    AreaType.YELLOW},
                 {AreaType.GREEN,    AreaType.GREEN,     AreaType.GREEN,     AreaType.GREEN,     AreaType.YELLOW,    AreaType.YELLOW},
                 };
+    }
+
+    public void setSelectedRowAndColumn(int row, int column) {
+        if (row >= 0 && row < this.rows) {
+            this.selectedRow = row;
+        }
+        if (column >= 0 && column < this.columns) {
+            this.selectedColumn = column;
+        }
+        invalidate();
     }
 
     private void initPaints() {
@@ -90,6 +101,18 @@ public class RiskAnalysisView extends View {
         return new Rect(left, top, left+w-1, top+h-1);
     }
 
+    private Paint getPaintForRowAndColumn(int row, int column) {
+        Paint p = areasPaints.get(colorsMatrix[row][column].ordinal());
+        p.setAlpha(shouldBeDisplayedAsSelectedBasedOnRowAndColumn(row, column) ? 150 : 255);
+        return p;
+    }
+
+    private boolean shouldBeDisplayedAsSelectedBasedOnRowAndColumn(int row, int column) {
+        return      row == selectedRow && column <= selectedColumn
+                ||  row <= selectedRow && column == selectedColumn;
+
+    }
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -98,7 +121,7 @@ public class RiskAnalysisView extends View {
         canvas.drawRect(0, 0, getWidth(), getHeight(), separatorPaint);
         for (int row = 0; row < this.rows; row++) {
             for (int col = 0; col < this.columns; col++) {
-                canvas.drawRect(getRectWithinWidthAndHeightForRowAndColumn(width, height, row, col), areasPaints.get(colorsMatrix[row][col].ordinal()));
+                canvas.drawRect(getRectWithinWidthAndHeightForRowAndColumn(width, height, row, col), getPaintForRowAndColumn(row, col));
             }
         }
     }
