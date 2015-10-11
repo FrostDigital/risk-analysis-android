@@ -43,6 +43,7 @@ public class RiskAnalysisView extends View {
     private List<Paint> areasPaints;
     public RiskAnalysisView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        //TODO: make customizable via xml attributes.
         columns = 6;
         rows = 6;
         initPaints();
@@ -58,17 +59,22 @@ public class RiskAnalysisView extends View {
     }
 
     public void setSelectedRowAndColumn(int row, int column) {
-        if (row >= 0 && row < this.rows) {
+        boolean shouldInvalidate = false;
+        if (row >= 0 && row < this.rows && this.selectedRow != row) {
             this.selectedRow = row;
+            shouldInvalidate = true;
         }
-        if (column >= 0 && column < this.columns) {
+        if (column >= 0 && column < this.columns && this.selectedColumn != column) {
             this.selectedColumn = column;
+            shouldInvalidate = true;
         }
-        invalidate();
+        if (shouldInvalidate) {
+            invalidate();
+        }
     }
 
     private void initPaints() {
-        greenPaint = new Paint();
+        greenPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         greenPaint.setColor(getResources().getColor(AreaType.GREEN.getColor()));
         greenPaint.setStyle(Paint.Style.FILL);
 
