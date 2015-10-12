@@ -14,49 +14,16 @@ import android.view.View;
  *
  * Copyright (c) 2015 Frost°. All rights reserved.
  */
-public class RiskAnalysisOverlayView extends View {
+public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
 
     private Paint mPointerPaint, mTextPaint;
-    private int rows, columns;
-    private int mWidth, mHeight;
-
-    //selection
-    private int mSelectedRow, mSelectedColumn;
-
-    //Inner sizes and calculations
-    private Rect[][] mAreasMatrix;
-
-    //Reusable vars
-    Path mReusablePath;
-    Rect mReusableBounds;
 
     public RiskAnalysisOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         //TODO: make customizable via xml attributes.
-        rows = 6;
-        columns = 6;
+        setRows(6);
+        setColumns(6);
         initPaints();
-        mReusableBounds = new Rect();
-    }
-
-    /**
-     * Allows to set selected row and column based on user interaction
-     * @param row
-     * @param column
-     */
-    public void setSelectedRowAndColumn(int row, int column) {
-        boolean shouldInvalidate = false;
-        if (row >= 0 && row < this.rows && mSelectedRow != row) {
-            mSelectedRow = row;
-            shouldInvalidate = true;
-        }
-        if (column >= 0 && column < this.columns && mSelectedColumn != column) {
-            mSelectedColumn = column;
-            shouldInvalidate = true;
-        }
-        if (shouldInvalidate) {
-            invalidate();
-        }
     }
 
     ////
@@ -75,38 +42,21 @@ public class RiskAnalysisOverlayView extends View {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    private void initAreasMatrixWithWidthAndHeight(int width, int height) {
-        int rowHeight = height / this.rows;
-        int colWidth = width / this.columns;
-        mAreasMatrix = new Rect[this.rows][this.columns];
-        int top, left;
-        for (int rowIndex = 0; rowIndex < this.rows; rowIndex++) {
-            for (int colIndex = 0; colIndex < this.columns; colIndex++) {
-                top  = rowHeight * rowIndex;
-                left = colWidth * colIndex;
-                mAreasMatrix[rowIndex][colIndex] = new Rect(left, top, left+colWidth-1, top+rowHeight-1);
-            }
-        }
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //Lazy init of areas
-        if (mWidth != getWidth() || mHeight != getHeight()) {
-            mWidth = getWidth();
-            mHeight = getHeight();
-            initAreasMatrixWithWidthAndHeight(mWidth, mHeight);
-        }
         drawPointer(canvas);
     }
 
     private void drawPointer(Canvas canvas) {
+        if (mAreasMatrix == null) {
+            return;
+        }
         Rect selectedArea = mAreasMatrix[mSelectedRow][mSelectedColumn];
         float radius = selectedArea.width() < selectedArea.height() ? selectedArea.width() / 2 : selectedArea.height() / 2;
         canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius, mPointerPaint);
         String textToDraw = String.format("%d:%d", mSelectedRow, mSelectedColumn);
         mTextPaint.getTextBounds(textToDraw, 0, textToDraw.length(), mReusableBounds);
-        canvas.drawText(textToDraw, selectedArea.centerX(), selectedArea.centerY()+mReusableBounds.height()/2.0f, mTextPaint);
+        canvas.drawText(textToDraw, selectedArea.centerX(), selectedArea.centerY() + mReusableBounds.height() / 2.0f, mTextPaint);
     }
 }
