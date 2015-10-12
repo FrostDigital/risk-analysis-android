@@ -3,10 +3,8 @@ package se.frostdigital.riskanalysis;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.View;
 
 /**
  * RiskAnalysis
@@ -53,7 +51,7 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
             return;
         }
         Rect selectedArea = mAreasMatrix[mSelectedRow][mSelectedColumn];
-        float radius = selectedArea.width() < selectedArea.height() ? selectedArea.width() / 2 : selectedArea.height() / 2;
+        float radius = selectedArea.width() < selectedArea.height() ? selectedArea.width() / 2.0f : selectedArea.height() / 2.0f;
         canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius, mPointerPaint);
         String textToDraw = String.format("%d:%d", mSelectedRow, mSelectedColumn);
         mTextPaint.getTextBounds(textToDraw, 0, textToDraw.length(), mReusableBounds);

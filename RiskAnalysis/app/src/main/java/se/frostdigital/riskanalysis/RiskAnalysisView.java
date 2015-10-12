@@ -16,7 +16,7 @@ import java.util.List;
  *
  * Copyright (c) 2015 Frost°. All rights reserved.
  */
-public class RiskAnalysisView extends View {
+public class RiskAnalysisView extends RiskAnalysisAreasSuperView {
 
     enum AreaType {
         GREEN(R.color.green),
@@ -34,9 +34,6 @@ public class RiskAnalysisView extends View {
         }
     }
 
-    private int columns;
-    private int rows;
-    private int selectedRow, selectedColumn;
     private AreaType[][] colorsMatrix;
 
     private Paint greenPaint, yellowPaint, redPaint, separatorPaint;
@@ -44,8 +41,8 @@ public class RiskAnalysisView extends View {
     public RiskAnalysisView(Context context, AttributeSet attrs) {
         super(context, attrs);
         //TODO: make customizable via xml attributes.
-        columns = 6;
-        rows = 6;
+        setRows(6);
+        setColumns(6);
         initPaints();
         colorsMatrix = new AreaType[][]
                 {
@@ -56,21 +53,6 @@ public class RiskAnalysisView extends View {
                 {AreaType.GREEN,    AreaType.GREEN,     AreaType.YELLOW,    AreaType.YELLOW,    AreaType.YELLOW,    AreaType.YELLOW},
                 {AreaType.GREEN,    AreaType.GREEN,     AreaType.GREEN,     AreaType.GREEN,     AreaType.YELLOW,    AreaType.YELLOW},
                 };
-    }
-
-    public void setSelectedRowAndColumn(int row, int column) {
-        boolean shouldInvalidate = false;
-        if (row >= 0 && row < this.rows && this.selectedRow != row) {
-            this.selectedRow = row;
-            shouldInvalidate = true;
-        }
-        if (column >= 0 && column < this.columns && this.selectedColumn != column) {
-            this.selectedColumn = column;
-            shouldInvalidate = true;
-        }
-        if (shouldInvalidate) {
-            invalidate();
-        }
     }
 
     private void initPaints() {
@@ -94,19 +76,6 @@ public class RiskAnalysisView extends View {
         areasPaints.add(redPaint);
     }
 
-    private Rect getRectWithinWidthAndHeightForRowAndColumn(int width, int height, int row, int column) {
-        //First check that rows and columns exist
-        if (row < 0 || column < 0) {
-            return new Rect(0, 0, 0, 0);
-        }
-        int w = width / this.columns;
-        int h = height / this.rows;
-        int left = w*column;
-        int top = h*row;
-
-        return new Rect(left, top, left+w-1, top+h-1);
-    }
-
     private Paint getPaintForRowAndColumn(int row, int column) {
         Paint p = areasPaints.get(colorsMatrix[row][column].ordinal());
         p.setAlpha(shouldBeDisplayedAsSelectedBasedOnRowAndColumn(row, column) ? 150 : 255);
@@ -114,20 +83,18 @@ public class RiskAnalysisView extends View {
     }
 
     private boolean shouldBeDisplayedAsSelectedBasedOnRowAndColumn(int row, int column) {
-        return      row == selectedRow && column <= selectedColumn
-                ||  row <= selectedRow && column == selectedColumn;
+        return      row == mSelectedRow && column <= mSelectedColumn
+                ||  row <= mSelectedRow && column == mSelectedColumn;
 
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        int width = getWidth();
-        int height = getHeight();
         canvas.drawRect(0, 0, getWidth(), getHeight(), separatorPaint);
-        for (int row = 0; row < this.rows; row++) {
-            for (int col = 0; col < this.columns; col++) {
-                canvas.drawRect(getRectWithinWidthAndHeightForRowAndColumn(width, height, row, col), getPaintForRowAndColumn(row, col));
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getColumns(); col++) {
+                canvas.drawRect(mAreasMatrix[row][col], getPaintForRowAndColumn(row, col));
             }
         }
     }
