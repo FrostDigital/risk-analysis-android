@@ -14,8 +14,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RiskAnalysisOverlayView overlayView;
     private Spinner projectsSpinner;
 
-    private static int ANALYSIS_SIZE = 6;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Random r = new Random();
-        int randomRow = r.nextInt(ANALYSIS_SIZE);
-        int randomColumn = r.nextInt(ANALYSIS_SIZE);
+        int randomRow = r.nextInt(getResources().getInteger(R.integer.risk_rows));
+        int randomColumn = r.nextInt(getResources().getInteger(R.integer.risk_columns));
         riskAnalysisView.setSelectedRowAndColumn(randomRow,randomColumn);
         overlayView.setSelectedRowAndColumn(randomRow,randomColumn);
     }

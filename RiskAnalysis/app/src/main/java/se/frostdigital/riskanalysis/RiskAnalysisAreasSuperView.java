@@ -1,6 +1,7 @@
 package se.frostdigital.riskanalysis;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -30,6 +31,14 @@ public class RiskAnalysisAreasSuperView extends View {
 
     public RiskAnalysisAreasSuperView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray customAttrs = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RiskAnalysisAreasSuperView,0, 0);
+        try {
+            mRows = customAttrs.getInt(R.styleable.RiskAnalysisAreasSuperView_rows, 0);
+            mColumns = customAttrs.getInt(R.styleable.RiskAnalysisAreasSuperView_columns, 0);
+        } finally {
+            customAttrs.recycle();
+        }
+
         mReusableBounds = new Rect();
         mReusablePath = new Path();
     }

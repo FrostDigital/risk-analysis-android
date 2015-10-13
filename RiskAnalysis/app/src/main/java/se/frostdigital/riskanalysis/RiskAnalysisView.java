@@ -3,9 +3,7 @@ package se.frostdigital.riskanalysis;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +38,6 @@ public class RiskAnalysisView extends RiskAnalysisAreasSuperView {
     private List<Paint> areasPaints;
     public RiskAnalysisView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //TODO: make customizable via xml attributes.
-        setRows(6);
-        setColumns(6);
         initPaints();
         colorsMatrix = new AreaType[][]
                 {
@@ -77,7 +72,12 @@ public class RiskAnalysisView extends RiskAnalysisAreasSuperView {
     }
 
     private Paint getPaintForRowAndColumn(int row, int column) {
-        Paint p = areasPaints.get(colorsMatrix[row][column].ordinal());
+        Paint p;
+        if (row < colorsMatrix.length && column < colorsMatrix[row].length) {
+            p = areasPaints.get(colorsMatrix[row][column].ordinal());
+        } else {
+            p = separatorPaint;
+        }
         p.setAlpha(shouldBeDisplayedAsSelectedBasedOnRowAndColumn(row, column) ? 150 : 255);
         return p;
     }

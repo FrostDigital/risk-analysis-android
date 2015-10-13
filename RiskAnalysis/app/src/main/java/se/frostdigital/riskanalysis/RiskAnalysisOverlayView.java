@@ -18,9 +18,6 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
 
     public RiskAnalysisOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //TODO: make customizable via xml attributes.
-        setRows(6);
-        setColumns(6);
         initPaints();
     }
 
