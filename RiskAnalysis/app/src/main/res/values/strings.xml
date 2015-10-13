@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RiskAnalysis</string>
+    <string name="project_spinner_title">Välj projekt</string>
+    <string name="risk_view_title">Sannolikhet - och konsekvensbedömning</string>
 </resources>

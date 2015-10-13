@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="projects_array">
+        <item>Projekt #1</item>
+        <item>Projekt #2</item>
+        <item>Projekt #3</item>
+        <item>Projekt #4</item>
+    </string-array>
+</resources>

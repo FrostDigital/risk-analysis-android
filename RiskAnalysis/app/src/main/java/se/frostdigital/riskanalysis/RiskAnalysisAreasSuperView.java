@@ -17,7 +17,6 @@ public class RiskAnalysisAreasSuperView extends View {
 
     private int mWidth, mHeight;
 
-
     protected int mRows, mColumns;
     //selection
     protected int mSelectedRow, mSelectedColumn;
