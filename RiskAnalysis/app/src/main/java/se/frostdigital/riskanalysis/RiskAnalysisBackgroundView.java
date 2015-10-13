@@ -14,7 +14,7 @@ import java.util.List;
  *
  * Copyright (c) 2015 Frost°. All rights reserved.
  */
-public class RiskAnalysisView extends RiskAnalysisAreasSuperView {
+public class RiskAnalysisBackgroundView extends RiskAnalysisAreasSuperView {
 
     enum AreaType {
         GREEN(R.color.green),
@@ -36,7 +36,7 @@ public class RiskAnalysisView extends RiskAnalysisAreasSuperView {
 
     private Paint greenPaint, yellowPaint, redPaint, separatorPaint;
     private List<Paint> areasPaints;
-    public RiskAnalysisView(Context context, AttributeSet attrs) {
+    public RiskAnalysisBackgroundView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initPaints();
         colorsMatrix = new AreaType[][]

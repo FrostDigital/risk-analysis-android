@@ -10,7 +10,7 @@ import android.widget.Spinner;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private RiskAnalysisView riskAnalysisView;
+    private RiskAnalysisBackgroundView riskAnalysisBackgroundView;
     private RiskAnalysisOverlayView overlayView;
     private Spinner projectsSpinner;
 
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void initUI() {
-        riskAnalysisView = (RiskAnalysisView) findViewById(R.id.riskAnalysis);
+        riskAnalysisBackgroundView = (RiskAnalysisBackgroundView) findViewById(R.id.riskAnalysis);
         overlayView = (RiskAnalysisOverlayView) findViewById(R.id.riskAnalysisOverlay);
 
         projectsSpinner = (Spinner) findViewById(R.id.projectsSpinner);
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Random r = new Random();
         int randomRow = r.nextInt(getResources().getInteger(R.integer.risk_rows));
         int randomColumn = r.nextInt(getResources().getInteger(R.integer.risk_columns));
-        riskAnalysisView.setSelectedRowAndColumn(randomRow,randomColumn);
+        riskAnalysisBackgroundView.setSelectedRowAndColumn(randomRow,randomColumn);
         overlayView.setSelectedRowAndColumn(randomRow,randomColumn);
     }
 
