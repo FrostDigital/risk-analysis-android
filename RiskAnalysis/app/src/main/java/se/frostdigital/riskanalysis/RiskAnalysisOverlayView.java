@@ -5,6 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 
 /**
  * RiskAnalysis
@@ -15,10 +18,12 @@ import android.util.AttributeSet;
 public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
 
     private Paint mPointerPaint, mTextPaint;
+    private GestureDetector mGestureDetector;
 
     public RiskAnalysisOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initPaints();
+        initGestureDetector();
     }
 
     ////
@@ -53,5 +58,55 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
         String textToDraw = String.format("%d:%d", mSelectedRow, mSelectedColumn);
         mTextPaint.getTextBounds(textToDraw, 0, textToDraw.length(), mReusableBounds);
         canvas.drawText(textToDraw, selectedArea.centerX(), selectedArea.centerY() + mReusableBounds.height() / 2.0f, mTextPaint);
+    }
+
+    ////
+    //// Handling Touch events
+    ////
+
+    private class RiskAnalysisGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent event) {
+            boolean shouldAllowGesture = isInSelectedArea(event.getX(), event.getY());
+            Log.v(this.getClass().getName(), "isInSelectedArea: " + (shouldAllowGesture ? "YES" : "NO"));
+
+            return shouldAllowGesture;
+        }
+    }
+
+    private void initGestureDetector() {
+        mGestureDetector = new GestureDetector(RiskAnalysisOverlayView.this.getContext(), new RiskAnalysisGestureListener());
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        boolean result = mGestureDetector.onTouchEvent(event);
+        if (!result) {
+            if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP) {
+                result = updateSelectionForCoordinates(event.getX(), event.getY());
+            }
+        }
+        return result;
+    }
+
+    private boolean isInSelectedArea(float x, float y) {
+        Rect selectedRect = mAreasMatrix[mSelectedRow][mSelectedColumn];
+        return selectedRect.contains((int)x, (int)y);
+    }
+
+    private boolean updateSelectionForCoordinates(float x, float y) {
+        if (x > getWidth() || y > getHeight()) {
+            return false;
+        }
+        for (int row = 0; row < mAreasMatrix.length; row++) {
+            for (int col = 0; col < mAreasMatrix[row].length; col++) {
+                if (mAreasMatrix[row][col].contains((int) x, (int) y)) {
+                    setSelectedRowAndColumn(row, col);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

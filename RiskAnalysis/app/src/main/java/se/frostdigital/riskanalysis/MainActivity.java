@@ -32,7 +32,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void setupRiskAnalysisViews() {
-        //Do any needed setup of Risk Analysis views here
+        overlayView.setOnSelectionChangedListener(new RiskAnalysisAreasSuperView.OnSelectionChangedListener() {
+            @Override
+            public void onSelectionChanged(int row, int column) {
+                riskAnalysisBackgroundView.setSelectedRowAndColumn(row, column);
+            }
+        });
     }
 
     private void setupProjectsSpinner() {
