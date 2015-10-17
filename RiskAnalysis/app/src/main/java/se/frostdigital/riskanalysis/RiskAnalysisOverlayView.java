@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -99,8 +100,22 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
 
     private void drawBubble(Canvas canvas) {
         RectF bubbleRect = getBubbleRect();
+        //Hacky solution to allow drawing bubble out of bounds
+        boolean shouldExtendBounds = bubbleRect.top <= 0;
+        if (shouldExtendBounds) {
+            canvas.save();
+            // allow drawing out of bounds vertically
+            Rect clipBounds = canvas.getClipBounds();
+            clipBounds.inset(0, (int) bubbleRect.top);
+            canvas.clipRect(clipBounds, Region.Op.REPLACE);
+        }
+
         canvas.drawBitmap(mBubbleBitmap, null, bubbleRect, null);
-        drawTextInCenteredXY(canvas, getTextToDraw(), bubbleRect.centerX(), bubbleRect.centerY()-10);
+        drawTextInCenteredXY(canvas, getTextToDraw(), bubbleRect.centerX(), bubbleRect.centerY() - 10);
+
+        if (shouldExtendBounds) {
+            canvas.restore();
+        }
     }
 
     ////
