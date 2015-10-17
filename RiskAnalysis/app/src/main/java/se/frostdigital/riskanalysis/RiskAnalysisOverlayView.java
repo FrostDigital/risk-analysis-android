@@ -1,11 +1,13 @@
 package se.frostdigital.riskanalysis;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -19,11 +21,14 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
 
     private Paint mPointerPaint, mTextPaint;
     private GestureDetector mGestureDetector;
+    private boolean mShouldShowBubble;
+    private Bitmap mBubbleBitmap;
 
     public RiskAnalysisOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initPaints();
         initGestureDetector();
+        mBubbleBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.bubble);
     }
 
     ////
@@ -42,22 +47,56 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
+    private String getTextToDraw() {
+        return String.format("%d:%d", mSelectedRow, mSelectedColumn);
+    }
+
+    private void setShouldShowBubble(boolean showBubble) {
+        if (mShouldShowBubble != showBubble) {
+            mShouldShowBubble = showBubble;
+            invalidate();
+        }
+    }
+
+    ////
+    //// Draw methods
+    ////
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawPointer(canvas);
-    }
-
-    private void drawPointer(Canvas canvas) {
         if (mAreasMatrix == null) {
             return;
         }
+        drawPointer(canvas);
+        if (mShouldShowBubble) {
+            drawBubble(canvas);
+        }
+    }
+
+    private void drawPointer(Canvas canvas) {
         Rect selectedArea = mAreasMatrix[mSelectedRow][mSelectedColumn];
-        float radius = selectedArea.width() < selectedArea.height() ? selectedArea.width() / 2.0f : selectedArea.height() / 2.0f;
+        float radius = Math.min(selectedArea.width(), selectedArea.height()) / 2.0f;
         canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius, mPointerPaint);
-        String textToDraw = String.format("%d:%d", mSelectedRow, mSelectedColumn);
+        drawTextInCenteredXY(canvas, getTextToDraw(), selectedArea.centerX(), selectedArea.centerY());
+    }
+
+    private void drawTextInCenteredXY(Canvas canvas, String textToDraw, float x, float y) {
         mTextPaint.getTextBounds(textToDraw, 0, textToDraw.length(), mReusableBounds);
-        canvas.drawText(textToDraw, selectedArea.centerX(), selectedArea.centerY() + mReusableBounds.height() / 2.0f, mTextPaint);
+        canvas.drawText(textToDraw, x, y + mReusableBounds.height() / 2.0f, mTextPaint);
+    }
+
+    private RectF getBubbleRect() {
+        RectF bubbleArea = new RectF(mAreasMatrix[mSelectedRow][mSelectedColumn]);
+        bubbleArea.offset(0, -bubbleArea.height()*1.5f);
+        bubbleArea.bottom += bubbleArea.height()*0.25f;
+        return bubbleArea;
+    }
+
+    private void drawBubble(Canvas canvas) {
+        RectF bubbleRect = getBubbleRect();
+        canvas.drawBitmap(mBubbleBitmap, null, bubbleRect, null);
+        drawTextInCenteredXY(canvas, getTextToDraw(), bubbleRect.centerX(), bubbleRect.centerY()-10);
     }
 
     ////
@@ -67,10 +106,8 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
     private class RiskAnalysisGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onDown(MotionEvent event) {
-            boolean shouldAllowGesture = isInSelectedArea(event.getX(), event.getY());
-            Log.v(this.getClass().getName(), "isInSelectedArea: " + (shouldAllowGesture ? "YES" : "NO"));
-
-            return shouldAllowGesture;
+            //Should allow gestures which start in selected area
+            return isInSelectedArea(event.getX(), event.getY());
         }
     }
 
@@ -81,13 +118,27 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean result = mGestureDetector.onTouchEvent(event);
+        //This happens in case if initial down action occurred
+        if (result && event.getAction() == MotionEvent.ACTION_DOWN) {
+            setShouldShowBubble(true);
+        }
         if (!result) {
-            if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP) {
+            //Check if moved out of current area and need to update selection
+            if (event.getAction() == MotionEvent.ACTION_MOVE) {
                 result = updateSelectionForCoordinates(event.getX(), event.getY());
+            }
+            //Check if gesture is to be finised, hide bubble then
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                setShouldShowBubble(false);
+                result = true;
             }
         }
         return result;
     }
+
+    ////
+    //// Touch Helpers
+    ////
 
     private boolean isInSelectedArea(float x, float y) {
         Rect selectedRect = mAreasMatrix[mSelectedRow][mSelectedColumn];
