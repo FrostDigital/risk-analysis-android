@@ -44,7 +44,8 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(getResources().getColor(R.color.white));
         mTextPaint.setStyle(Paint.Style.FILL);
-        mTextPaint.setTextSize(30.0f);
+        mTextPaint.setTextSize(50.0f);
+        mTextPaint.setTextScaleX(1.0f);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
@@ -76,19 +77,20 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
     }
 
     private void drawPointer(Canvas canvas) {
-        Rect selectedArea = mAreasMatrix[mSelectedRow][mSelectedColumn];
+        RectF selectedArea = mAreasMatrix[mSelectedRow][mSelectedColumn];
         float radius = Math.min(selectedArea.width(), selectedArea.height()) / 2.0f;
         //If bubble is to be shown, circle should be bigger 20%
         if (mShouldShowBubble) {
             radius *= 1.2f;
         }
         canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius, mPointerPaint);
-        drawTextInCenteredXY(canvas, getTextToDraw(), selectedArea.centerX(), selectedArea.centerY());
+        drawTextInRectWithdXdY(canvas, getTextToDraw(), selectedArea, 0, 0);
     }
 
-    private void drawTextInCenteredXY(Canvas canvas, String textToDraw, float x, float y) {
+    private void drawTextInRectWithdXdY(Canvas canvas, String textToDraw, RectF rect, float dX, float dY) {
+        String text = getTextToDraw();
         mTextPaint.getTextBounds(textToDraw, 0, textToDraw.length(), mReusableBounds);
-        canvas.drawText(textToDraw, x, y + mReusableBounds.height() / 2.0f, mTextPaint);
+        canvas.drawText(textToDraw, rect.centerX()+dX, rect.centerY() + dY + mReusableBounds.height() / 2.0f, mTextPaint);
     }
 
     private RectF getBubbleRect() {
@@ -111,7 +113,7 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
         }
 
         canvas.drawBitmap(mBubbleBitmap, null, bubbleRect, null);
-        drawTextInCenteredXY(canvas, getTextToDraw(), bubbleRect.centerX(), bubbleRect.centerY() - 10);
+        drawTextInRectWithdXdY(canvas, getTextToDraw(), bubbleRect, 0, - 10);
 
         if (shouldExtendBounds) {
             canvas.restore();
@@ -160,8 +162,8 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
     ////
 
     private boolean isInSelectedArea(float x, float y) {
-        Rect selectedRect = mAreasMatrix[mSelectedRow][mSelectedColumn];
-        return selectedRect.contains((int)x, (int)y);
+        RectF selectedRect = mAreasMatrix[mSelectedRow][mSelectedColumn];
+        return selectedRect.contains(x, y);
     }
 
     private boolean updateSelectionForCoordinates(float x, float y) {
@@ -170,7 +172,7 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
         }
         for (int row = 0; row < mAreasMatrix.length; row++) {
             for (int col = 0; col < mAreasMatrix[row].length; col++) {
-                if (mAreasMatrix[row][col].contains((int) x, (int) y)) {
+                if (mAreasMatrix[row][col].contains(x, y)) {
                     setSelectedRowAndColumn(row, col);
                     return true;
                 }

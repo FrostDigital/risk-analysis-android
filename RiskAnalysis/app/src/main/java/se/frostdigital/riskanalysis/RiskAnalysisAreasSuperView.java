@@ -3,8 +3,10 @@ package se.frostdigital.riskanalysis;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -22,13 +24,14 @@ public class RiskAnalysisAreasSuperView extends View {
     //selection
     protected int mSelectedRow, mSelectedColumn;
     //Inner sizes and calculations
-    protected Rect[][] mAreasMatrix;
+    protected RectF[][] mAreasMatrix;
     private OnSelectionChangedListener mOnSelectionChangedListener;
 
 
     //Reusable vars
     protected Path mReusablePath;
     protected Rect mReusableBounds;
+    protected Paint fitTextPaint;
 
     public RiskAnalysisAreasSuperView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,6 +45,8 @@ public class RiskAnalysisAreasSuperView extends View {
 
         mReusableBounds = new Rect();
         mReusablePath = new Path();
+        fitTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        fitTextPaint.setStyle(Paint.Style.STROKE);
     }
 
     ////
@@ -109,13 +114,13 @@ public class RiskAnalysisAreasSuperView extends View {
         }
         int rowHeight = height / this.getRows();
         int colWidth = width / this.getColumns();
-        mAreasMatrix = new Rect[this.getRows()][this.getColumns()];
+        mAreasMatrix = new RectF[this.getRows()][this.getColumns()];
         int top, left;
         for (int rowIndex = 0; rowIndex < this.getRows(); rowIndex++) {
             for (int colIndex = 0; colIndex < this.getColumns(); colIndex++) {
                 top = rowHeight * rowIndex;
                 left = colWidth * colIndex;
-                mAreasMatrix[rowIndex][colIndex] = new Rect(left, top, left + colWidth - 1, top + rowHeight - 1);
+                mAreasMatrix[rowIndex][colIndex] = new RectF(left, top, left + colWidth - 1, top + rowHeight - 1);
             }
         }
     }
@@ -138,5 +143,34 @@ public class RiskAnalysisAreasSuperView extends View {
     public interface OnSelectionChangedListener {
         public void onSelectionChanged(int row, int column);
     }
+
+    ////
+    //// Layout Helpers
+    ////
+
+    ////
+    //// Layout Helpers
+    ////
+
+    /**
+     * Allows to calculate desired text size to fit whole text in one line in the rect.
+     * @param text - text to count size for
+     * @param textRect - rect to fit text in
+     * @return textSize to use to fit text in best way
+     */
+    protected float getTextSizeForTextInRect(String text, RectF textRect) {
+        float textSize = 1;
+        fitTextPaint.setTextSize(textSize);
+        fitTextPaint.setTextScaleX(1.0f);
+        fitTextPaint.getTextBounds(text, 0, text.length(), mReusableBounds);
+        while (mReusableBounds.height() < textRect.height()*.7 && mReusableBounds.width() < textRect.width()) {
+            textSize++;
+            fitTextPaint.setTextSize(textSize);
+            fitTextPaint.getTextBounds(text, 0, text.length(), mReusableBounds);
+        }
+
+        return --textSize;
+    }
+
 
 }
