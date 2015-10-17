@@ -23,6 +23,7 @@ public class RiskAnalysisAreasSuperView extends View {
     protected int mSelectedRow, mSelectedColumn;
     //Inner sizes and calculations
     protected Rect[][] mAreasMatrix;
+    private OnSelectionChangedListener mOnSelectionChangedListener;
 
 
     //Reusable vars
@@ -64,6 +65,9 @@ public class RiskAnalysisAreasSuperView extends View {
         }
         if (shouldInvalidate) {
             invalidate();
+            if (mOnSelectionChangedListener != null) {
+                mOnSelectionChangedListener.onSelectionChanged(mSelectedRow, mSelectedColumn);
+            }
         }
     }
 
@@ -90,6 +94,10 @@ public class RiskAnalysisAreasSuperView extends View {
         initAreasMatrixWithWidthAndHeight(mWidth, mHeight);
     }
 
+    public void setOnSelectionChangedListener(OnSelectionChangedListener listener) {
+        this.mOnSelectionChangedListener = listener;
+    }
+
     /**
      * Allows to init / invalidate Areas matrix
      * @param width - width of the view
@@ -112,7 +120,6 @@ public class RiskAnalysisAreasSuperView extends View {
         }
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -123,4 +130,13 @@ public class RiskAnalysisAreasSuperView extends View {
             initAreasMatrixWithWidthAndHeight(mWidth, mHeight);
         }
     }
+
+    ////
+    //// Selection Changed Listener
+    ////
+
+    public interface OnSelectionChangedListener {
+        public void onSelectionChanged(int row, int column);
+    }
+
 }
