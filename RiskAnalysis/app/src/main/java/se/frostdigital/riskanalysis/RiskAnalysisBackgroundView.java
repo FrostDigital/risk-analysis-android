@@ -84,7 +84,7 @@ public class RiskAnalysisBackgroundView extends RiskAnalysisAreasSuperView {
 
     private boolean shouldBeDisplayedAsSelectedBasedOnRowAndColumn(int row, int column) {
         return      row == mSelectedRow && column <= mSelectedColumn
-                ||  row <= mSelectedRow && column == mSelectedColumn;
+                ||  row >= mSelectedRow && column == mSelectedColumn;
 
     }
 
