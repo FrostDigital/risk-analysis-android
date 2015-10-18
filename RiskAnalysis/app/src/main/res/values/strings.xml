@@ -4,4 +4,7 @@
     <string name="risk_view_title">Sannolikhet - och konsekvensbedömning</string>
     <string name="x_axis_title">Sannolikhet</string>
     <string name="y_axis_title">Konsekvens/Påverkan</string>
+    <string name="prio_hint_low">Låg prioritet</string>
+    <string name="prio_hint_medium">Medelhög prioritet</string>
+    <string name="prio_hint_high">Hög prioritet</string>
 </resources>
