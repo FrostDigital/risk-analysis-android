@@ -61,12 +61,6 @@
         android:clipChildren="false"
         >
 
-        <se.frostdigital.riskanalysis.RiskAnalysisLegendView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            risk:axisOffset="@dimen/legendOffset"
-            />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -84,6 +78,21 @@
                 risk:alphaDefault="255"
                 risk:alphaSelected="150"
                 />
+        </RelativeLayout>
+
+        <se.frostdigital.riskanalysis.RiskAnalysisLegendView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        risk:axisOffset="@dimen/legendOffset"
+        />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/legendOffset"
+            android:paddingBottom="@dimen/legendOffset"
+            android:clipChildren="false"
+            >
 
             <se.frostdigital.riskanalysis.RiskAnalysisOverlayView
                 android:id="@+id/riskAnalysisOverlay"
