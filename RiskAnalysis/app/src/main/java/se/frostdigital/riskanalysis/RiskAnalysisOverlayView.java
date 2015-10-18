@@ -92,7 +92,7 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
     private void drawPointer(Canvas canvas) {
         RectF selectedArea = mAreasMatrix[mSelectedRow][mSelectedColumn];
         float radius = Math.min(selectedArea.width(), selectedArea.height()) / 2.0f;
-        //If bubble is to be shown, circle should be bigger 20%
+        //If bubble is to be shown, circle should be bigger
         if (mShouldShowBubble) {
             canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius * mPointeSizeOnDragMultiplier, mPointerPaint);
         } else {
