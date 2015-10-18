@@ -6,4 +6,23 @@
         <item>Projekt #3</item>
         <item>Projekt #4</item>
     </string-array>
+
+    <string-array name="legend_x_axis">
+        <item>Osannolik</item>
+        <item>Mkt liten</item>
+        <item>Liten</item>
+        <item>Begränsad</item>
+        <item>Hög</item>
+        <item>Mkt hög</item>
+    </string-array>
+
+    <string-array name="legend_y_axis">
+        <item>Mkt liten</item>
+        <item>Liten</item>
+        <item>Måttig</item>
+        <item>Stor</item>
+        <item>Mkt stor</item>
+        <item>Kritisk</item>
+    </string-array>
+
 </resources>

@@ -49,21 +49,37 @@
         android:clipChildren="false"
         >
 
-        <se.frostdigital.riskanalysis.RiskAnalysisBackgroundView
-            android:id="@+id/riskAnalysis"
+        <se.frostdigital.riskanalysis.RiskAnalysisLegendView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            risk:rows="@integer/risk_rows"
-            risk:columns="@integer/risk_columns"
+            risk:axisOffset="@dimen/legendOffset"
             />
 
-        <se.frostdigital.riskanalysis.RiskAnalysisOverlayView
-            android:id="@+id/riskAnalysisOverlay"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            risk:rows="@integer/risk_rows"
-            risk:columns="@integer/risk_columns"
-            />
+            android:paddingLeft="@dimen/legendOffset"
+            android:paddingBottom="@dimen/legendOffset"
+            android:clipChildren="false"
+            >
+
+            <se.frostdigital.riskanalysis.RiskAnalysisBackgroundView
+                android:id="@+id/riskAnalysis"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                risk:rows="@integer/risk_rows"
+                risk:columns="@integer/risk_columns"
+                />
+
+            <se.frostdigital.riskanalysis.RiskAnalysisOverlayView
+                android:id="@+id/riskAnalysisOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                risk:rows="@integer/risk_rows"
+                risk:columns="@integer/risk_columns"
+                />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

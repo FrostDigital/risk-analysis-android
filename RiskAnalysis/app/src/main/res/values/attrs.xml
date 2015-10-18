@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="RiskAnalysisAreasSuperView">
         <attr name="rows" format="integer"/>
         <attr name="columns" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="RiskAnalysisLegendView">
+        <attr name="axisOffset" format="dimension"/>
+    </declare-styleable>
+
 </resources>

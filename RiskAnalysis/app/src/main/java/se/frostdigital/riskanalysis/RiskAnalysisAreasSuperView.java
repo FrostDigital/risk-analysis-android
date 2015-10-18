@@ -31,7 +31,6 @@ public class RiskAnalysisAreasSuperView extends View {
     //Reusable vars
     protected Path mReusablePath;
     protected Rect mReusableBounds;
-    protected Paint fitTextPaint;
 
     public RiskAnalysisAreasSuperView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,8 +44,6 @@ public class RiskAnalysisAreasSuperView extends View {
 
         mReusableBounds = new Rect();
         mReusablePath = new Path();
-        fitTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        fitTextPaint.setStyle(Paint.Style.STROKE);
     }
 
     ////
@@ -143,34 +140,4 @@ public class RiskAnalysisAreasSuperView extends View {
     public interface OnSelectionChangedListener {
         public void onSelectionChanged(int row, int column);
     }
-
-    ////
-    //// Layout Helpers
-    ////
-
-    ////
-    //// Layout Helpers
-    ////
-
-    /**
-     * Allows to calculate desired text size to fit whole text in one line in the rect.
-     * @param text - text to count size for
-     * @param textRect - rect to fit text in
-     * @return textSize to use to fit text in best way
-     */
-    protected float getTextSizeForTextInRect(String text, RectF textRect) {
-        float textSize = 1;
-        fitTextPaint.setTextSize(textSize);
-        fitTextPaint.setTextScaleX(1.0f);
-        fitTextPaint.getTextBounds(text, 0, text.length(), mReusableBounds);
-        while (mReusableBounds.height() < textRect.height()*.7 && mReusableBounds.width() < textRect.width()) {
-            textSize++;
-            fitTextPaint.setTextSize(textSize);
-            fitTextPaint.getTextBounds(text, 0, text.length(), mReusableBounds);
-        }
-
-        return --textSize;
-    }
-
-
 }

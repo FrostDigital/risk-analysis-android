@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <integer name="risk_rows">6</integer>
     <integer name="risk_columns">6</integer>
+    <dimen name="legendOffset">20dp</dimen>
 </resources>
