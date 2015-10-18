@@ -1,6 +1,7 @@
 package se.frostdigital.riskanalysis;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,8 +26,11 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
     private boolean mShouldShowBubble;
     private Bitmap mBubbleBitmap;
 
+    private float mPointeSizeOnDragMultiplier;
+
     public RiskAnalysisOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initAttrs(context, attrs);
         initPaints();
         initGestureDetector();
         mBubbleBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.bubble);
@@ -35,6 +39,15 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
     ////
     //// Init methods and helpers
     ////
+
+    private void initAttrs(Context context, AttributeSet attrs) {
+        TypedArray customAttrs = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RiskAnalysisOverlayView,0, 0);
+        try {
+            mPointeSizeOnDragMultiplier = customAttrs.getFloat(R.styleable.RiskAnalysisOverlayView_pointerSizeOnDragMultiplier, 1.0f);
+        } finally {
+            customAttrs.recycle();
+        }
+    }
 
     private void initPaints() {
         mPointerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -81,10 +94,11 @@ public class RiskAnalysisOverlayView extends RiskAnalysisAreasSuperView {
         float radius = Math.min(selectedArea.width(), selectedArea.height()) / 2.0f;
         //If bubble is to be shown, circle should be bigger 20%
         if (mShouldShowBubble) {
-            radius *= 1.2f;
+            canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius * mPointeSizeOnDragMultiplier, mPointerPaint);
+        } else {
+            canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius, mPointerPaint);
+            drawTextInRectWithdXdY(canvas, getTextToDraw(), selectedArea, 0, 0);
         }
-        canvas.drawCircle(selectedArea.centerX(), selectedArea.centerY(), radius, mPointerPaint);
-        drawTextInRectWithdXdY(canvas, getTextToDraw(), selectedArea, 0, 0);
     }
 
     private void drawTextInRectWithdXdY(Canvas canvas, String textToDraw, RectF rect, float dX, float dY) {

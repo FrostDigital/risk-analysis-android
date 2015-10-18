@@ -79,6 +79,7 @@
                 android:layout_height="match_parent"
                 risk:rows="@integer/risk_rows"
                 risk:columns="@integer/risk_columns"
+                risk:pointerSizeOnDragMultiplier="1.25"
                 />
 
         </RelativeLayout>

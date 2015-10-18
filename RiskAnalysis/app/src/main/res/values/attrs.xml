@@ -11,6 +11,10 @@
         <attr name="alphaSelected" format="integer"/>
     </declare-styleable>
 
+    <declare-styleable name="RiskAnalysisOverlayView">
+        <attr name="pointerSizeOnDragMultiplier" format="float"/>
+    </declare-styleable>
+
     <declare-styleable name="RiskAnalysisLegendView">
         <attr name="axisOffset" format="dimension"/>
     </declare-styleable>
