@@ -2,4 +2,6 @@
     <string name="app_name">RiskAnalysis</string>
     <string name="project_spinner_title">Välj projekt:</string>
     <string name="risk_view_title">Sannolikhet - och konsekvensbedömning</string>
+    <string name="x_axis_title">Sannolikhet</string>
+    <string name="y_axis_title">Konsekvens/Påverkan</string>
 </resources>
