@@ -33,6 +33,12 @@ public class RiskAnalysisAreasSuperView extends View {
 
     public RiskAnalysisAreasSuperView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initAttrs(context, attrs);
+        mReusableBounds = new Rect();
+        mReusablePath = new Path();
+    }
+
+    private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray customAttrs = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RiskAnalysisAreasSuperView,0, 0);
         try {
             mRows = customAttrs.getInt(R.styleable.RiskAnalysisAreasSuperView_rows, 0);
@@ -40,9 +46,6 @@ public class RiskAnalysisAreasSuperView extends View {
         } finally {
             customAttrs.recycle();
         }
-
-        mReusableBounds = new Rect();
-        mReusablePath = new Path();
     }
 
     ////
