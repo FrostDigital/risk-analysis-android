@@ -69,6 +69,8 @@
                 android:layout_height="match_parent"
                 risk:rows="@integer/risk_rows"
                 risk:columns="@integer/risk_columns"
+                risk:alphaDefault="255"
+                risk:alphaSelected="150"
                 />
 
             <se.frostdigital.riskanalysis.RiskAnalysisOverlayView

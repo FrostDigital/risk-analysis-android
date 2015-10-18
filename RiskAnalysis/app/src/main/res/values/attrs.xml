@@ -6,6 +6,11 @@
         <attr name="columns" format="integer"/>
     </declare-styleable>
 
+    <declare-styleable name="RiskAnalysisBackgroundView">
+        <attr name="alphaDefault" format="integer"/>
+        <attr name="alphaSelected" format="integer"/>
+    </declare-styleable>
+
     <declare-styleable name="RiskAnalysisLegendView">
         <attr name="axisOffset" format="dimension"/>
     </declare-styleable>

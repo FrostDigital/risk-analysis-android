@@ -1,6 +1,7 @@
 package se.frostdigital.riskanalysis;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -33,11 +34,13 @@ public class RiskAnalysisBackgroundView extends RiskAnalysisAreasSuperView {
     }
 
     private AreaType[][] colorsMatrix;
+    private int mAlphaSelected, mAlphaDefault;
 
     private Paint greenPaint, yellowPaint, redPaint, separatorPaint;
     private List<Paint> areasPaints;
     public RiskAnalysisBackgroundView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initAttrs(context, attrs);
         initPaints();
         colorsMatrix = new AreaType[][]
                 {
@@ -48,6 +51,16 @@ public class RiskAnalysisBackgroundView extends RiskAnalysisAreasSuperView {
                 {AreaType.GREEN,    AreaType.GREEN,     AreaType.YELLOW,    AreaType.YELLOW,    AreaType.YELLOW,    AreaType.YELLOW},
                 {AreaType.GREEN,    AreaType.GREEN,     AreaType.GREEN,     AreaType.GREEN,     AreaType.YELLOW,    AreaType.YELLOW},
                 };
+    }
+
+    private void initAttrs(Context context, AttributeSet attrs) {
+        TypedArray customAttrs = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RiskAnalysisBackgroundView,0, 0);
+        try {
+            mAlphaDefault = customAttrs.getInt(R.styleable.RiskAnalysisBackgroundView_alphaDefault, 255);
+            mAlphaSelected = customAttrs.getInt(R.styleable.RiskAnalysisBackgroundView_alphaSelected, mAlphaDefault / 2);
+        } finally {
+            customAttrs.recycle();
+        }
     }
 
     private void initPaints() {
@@ -78,7 +91,7 @@ public class RiskAnalysisBackgroundView extends RiskAnalysisAreasSuperView {
         } else {
             p = separatorPaint;
         }
-        p.setAlpha(shouldBeDisplayedAsSelectedBasedOnRowAndColumn(row, column) ? 150 : 255);
+        p.setAlpha(shouldBeDisplayedAsSelectedBasedOnRowAndColumn(row, column) ? mAlphaSelected : mAlphaDefault);
         return p;
     }
 
